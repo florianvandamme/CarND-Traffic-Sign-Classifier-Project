@@ -7,3 +7,4 @@ models
 .idea
 traffic-signs-data
 venv
+trained_models
