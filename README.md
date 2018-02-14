@@ -100,7 +100,7 @@ My final model results were:
 
 I've based my model on [this published model](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). From there I did some tweaks to the input data. Because I was getting really good training results but bad validation results (overfitting). I've applied dropout which had a performance increase from 5 to even 10% accuracy in validation.
 
-####Test a Model on New Images
+#### Test a Model on New Images
 **1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.**
 
 In the random test I was having trouble with pictures that contained "extra" information e.g. the road, trees,.. so I played around with zooming out the training images which seemed to have positive results. But this can still be improved.
