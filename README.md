@@ -1,58 +1,166 @@
-## Project: Build a Traffic Sign Recognition Program
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-Overview
----
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to classify traffic signs. You will train and validate a model so it can classify traffic sign images using the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset). After the model is trained, you will then try out your model on images of German traffic signs that you find on the web.
+# Self-Driving Car Engineer Nanodegree
 
-We have included an Ipython notebook that contains further instructions 
-and starter code. Be sure to download the [Ipython notebook](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb). 
+## Deep Learning
 
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
+## Project: Build a Traffic Sign Recognition Classifier
 
-To meet specifications, the project will require submitting three files: 
-* the Ipython notebook with the code
-* the code exported as an html file
-* a writeup report either as a markdown or pdf file 
+####Writeup / README
 
-Creating a Great Writeup
----
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/481/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used in each step (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
+**1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.**
 
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
+You're reading it! and here is a link to my [project code](https://github.com/florianvandamme/CarND-Traffic-Sign-Classifier-Project)
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
+####Data Set Summary & Exploration
 
-The Project
----
-The goals / steps of this project are the following:
-* Load the data set
-* Explore, summarize and visualize the data set
-* Design, train and test a model architecture
-* Use the model to make predictions on new images
-* Analyze the softmax probabilities of the new images
-* Summarize the results with a written report
+**1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.**
 
-### Dependencies
-This lab requires:
+I used Numpy and Python to explore the dataset. I got the following results.
 
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
-
-The lab environment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
-
-### Dataset and Repository
-
-1. Download the data set. The classroom has a link to the data set in the "Project Instructions" content. This is a pickled dataset in which we've already resized the images to 32x32. It contains a training, validation and test set.
-2. Clone the project, which contains the Ipython notebook and the writeup template.
-```sh
-git clone https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project
-cd CarND-Traffic-Sign-Classifier-Project
-jupyter notebook Traffic_Sign_Classifier.ipynb
+```
+Number of training examples = 34799
+Number of testing examples = 12630
+Number of validation examples = 4410
+Traffic sign image data shape = (32, 32, 3)
+Number of classes = 43
 ```
 
-### Requirements for Submission
-Follow the instructions in the `Traffic_Sign_Classifier.ipynb` notebook and write the project report using the writeup template as a guide, `writeup_template.md`. Submit the project code and writeup document.
+**2. Include an exploratory visualization of the dataset.**
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+I've pulled up a random image from the training set with it's corresponding label.
 
+![png](output_8_1.png)
+```
+24 = Road narrows on the right
+```
+
+####Design and Test a Model Architecture
+
+**1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)**
+
+To start out I normalized all the images using the following method
+```python
+def normalize(batch):
+    x_min = batch.min(axis=(1, 2), keepdims=True)
+    x_max = batch.max(axis=(1, 2), keepdims=True)
+
+    return (batch - x_min)/(x_max-x_min)
+```
+
+This returns a normalized 32, 32, 3 image. To augment the data, I decided to flip, skew and zoom the pictures and adding these to the training set. Effectively quadrupling the dataset.
+
+**2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.**
+
+| **Layer**          | **Input**      |
+| :-------------:|:-------------:|
+| Input     | 32x32x3 RGB image |
+| Convolution 1     | 1x1 stride, valid padding, outputs 28x28x6      |
+| RELU | Activation |
+| Dropout | 0.7 keep probability |
+| Max pooling | 2x2 stride, outputs 14x14x6 |
+| Convolution 2 | 1x1 stride, valid padding, outputs 10x10x16 |
+| RELU | Activation |
+| Dropout | 0.7 keep probability |
+| Max pooling | 2x2 stride, outputs 5x5x16 |
+| Flatten | Outputs 400 |
+| Fully connected layer 1 | Input 400, output 200 |
+| RELU | Activation |
+| Dropout | 0.5 keep probability |
+| Fully connected layer 2 | Input 200, output 100 |
+| RELU | Activation |
+| Dropout | 0.5 keep probability |
+| Fully connected layer 3 | Input 100, output 84 |
+| RELU | Activation |
+| Dropout | 0.5 keep probability |
+| Fully connected layer 4 | Input 84, output 43 |
+| RELU | Activation |
+| Dropout | 0.5 keep probability |
+| Softmax | Output |
+
+**3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.**
+
+To train my model I used following hyper-parameters:
+```python
+EPOCHS = 40
+BATCH_SIZE = 128
+LEARNING_RATE = 0.0005
+DROPOUT = 0.5
+CONV_DROPOUT = 0.7
+```
+
+As optimizer I used the `AdamOptimizer`.
+
+**4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.**
+
+My final model results were:
+
+* training set accuracy of `95.6%`
+* validation set accuracy of `93.8%`
+* test set accuracy of `66.67%` (New images)
+
+I've based my model on [this published model](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). From there I did some tweaks to the input data. Because I was getting really good training results but bad validation results (overfitting). I've applied dropout which had a performance increase from 5 to even 10% accuracy in validation.
+
+####Test a Model on New Images
+**1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.**
+
+In the random test I was having trouble with pictures that contained "extra" information e.g. the road, trees,.. so I played around with zooming out the training images which seemed to have positive results. But this can still be improved.
+
+I obtained the following results
+
+```
+Total accuracy on new images: 66.67%
+```
+
+![png](output_20_1.png)
+
+
+
+![png](output_20_2.png)
+
+
+
+![png](output_20_3.png)
+
+
+
+![png](output_20_4.png)
+
+
+
+![png](output_20_5.png)
+
+
+
+![png](output_20_6.png)
+
+
+
+![png](output_20_7.png)
+
+
+
+![png](output_20_8.png)
+
+
+
+![png](output_20_9.png)
+
+
+
+![png](output_20_10.png)
+
+
+
+![png](output_20_11.png)
+
+
+
+![png](output_20_12.png)
+
+---
+
+The model still has difficulty with 'noise' in the image. Trees and roads are setting it off by quite a bit. However if I recrop the images to only contain the traffic sign without the noise, the model correctly classifies each image.
+
+**3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)**
+
+As seen in the images above, I the model 'knows' what the images contains the probability rates are very high (>96%). Howerver if the model is confused by noise it's predictions are super low.
