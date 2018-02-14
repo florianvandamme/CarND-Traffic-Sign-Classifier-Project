@@ -15,7 +15,7 @@ You're reading it! and here is a link to my [project code](https://github.com/fl
 
 **1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.**
 
-I used Numpy and Python to explore the dataset. I got the following results.
+I used Numpy and Python to explore the dataset. I got the following results:
 
 ```
 Number of training examples = 34799
@@ -27,7 +27,7 @@ Number of classes = 43
 
 **2. Include an exploratory visualization of the dataset.**
 
-I've pulled up a random image from the training set with it's corresponding label.
+I've pulled up a random image from the training set with its corresponding label.
 
 ![png](output_8_1.png)
 ```
@@ -98,7 +98,7 @@ My final model results were:
 * validation set accuracy of `93.8%`
 * test set accuracy of `66.67%` (New images)
 
-I've based my model on [this published model](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). From there I did some tweaks to the input data. Because I was getting really good training results but bad validation results (overfitting). I've applied dropout which had a performance increase from 5 to even 10% accuracy in validation.
+I've based my model on [this published model](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). From there on I did some tweaks to the input data. Because I was getting really good training results but bad validation results (overfitting). I've applied dropout which had a performance increase from 5 to even 10% accuracy in validation.
 
 #### Test a Model on New Images
 **1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.**
@@ -163,4 +163,4 @@ The model still has difficulty with 'noise' in the image. Trees and roads are se
 
 **3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)**
 
-As seen in the images above, I the model 'knows' what the images contains the probability rates are very high (>96%). Howerver if the model is confused by noise it's predictions are super low.
+As seen in the images above, if the model 'knows' what the images contain, the probability rates are very high (>96%). However if the model is confused by noise its predictions are super low.
